@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
+use App\Http\Controllers\AzureBatchTranscriptionController;
+use App\Jobs\CheckTranscriptionStatus;
+
 use App\Models\CallRecord;
 
 class AzureBlobController extends Controller
@@ -31,12 +34,14 @@ class AzureBlobController extends Controller
             'files.*' => 'required|mimes:mp3,wav,ogg|max:20480', // 20MB max size
         ]);
 
+        $fileNames = [];
+
         foreach ($request->file('files') as $file) {
             $fileName = $file->getClientOriginalName();
-
+            $fileNames[] = $fileName;
             $filePath = $file->getRealPath();
             $fileContent = file_get_contents($filePath);
-            // $this->uploadToAzureBlob($fileName, $fileContent, $file->getMimeType());
+            $this->uploadToAzureBlob($fileName, $fileContent, $file->getMimeType());
             CallRecord::create([
                 'file_name' => $fileName,
                 'status' => 'NotStarted'
@@ -44,7 +49,19 @@ class AzureBlobController extends Controller
 
         }
 
-        return redirect('/uploaded');
+        // Call AzureBatchTranscriptionController
+        $azureBatchTranscriptionController = new AzureBatchTranscriptionController();
+        $transcriptionResponse = $azureBatchTranscriptionController->startTranscription($fileNames);
+
+        $responseBody = $transcriptionResponse->getData();
+        if ($transcriptionResponse->getStatusCode() == 200) {
+            $responseBody = $transcriptionResponse->getData();
+            CheckTranscriptionStatus::dispatch($responseBody->batch_id)->delay(now()->addSeconds(30));
+            return redirect('/uploaded')->with('success', 'Files uploaded and transcription started successfully.')
+                                        ->with('transcriptionData', $transcriptionResponse);
+        } else {
+            return back()->with('error', 'Files uploaded but transcription failed.');
+        }
     }
 
     private function uploadToAzureBlob($fileName, $fileContent, $contentType)
