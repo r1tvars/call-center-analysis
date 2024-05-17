@@ -16,9 +16,9 @@ class CreateCallRecordsTable extends Migration
         Schema::create('call_records', function (Blueprint $table) {
             $table->id();
             $table->text('file_name');
-            $table->json('transcription');
+            $table->json('transcription')->nullable();;
             $table->string('status');
-            $table->string('batch_id');
+            $table->string('batch_id')->nullable();;
             $table->timestamps();
         });
     }
