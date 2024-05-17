@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
+use App\Models\CallRecord;
+
 class AzureBlobController extends Controller
 {
     private $client;
@@ -31,12 +33,18 @@ class AzureBlobController extends Controller
 
         foreach ($request->file('files') as $file) {
             $fileName = $file->getClientOriginalName();
+
             $filePath = $file->getRealPath();
             $fileContent = file_get_contents($filePath);
-            $this->uploadToAzureBlob($fileName, $fileContent, $file->getMimeType());
+            // $this->uploadToAzureBlob($fileName, $fileContent, $file->getMimeType());
+            CallRecord::create([
+                'file_name' => $fileName,
+                'status' => 'NotStarted'
+            ]);
+
         }
 
-        return back()->with('success', 'Files uploaded successfully.');
+        return redirect('/uploaded');
     }
 
     private function uploadToAzureBlob($fileName, $fileContent, $contentType)
