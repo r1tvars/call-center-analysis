@@ -13,3 +13,4 @@ Route::get('/', function () {
 
 Route::post('/uploaded', [AzureBlobController::class, 'upload'])->name('upload');
 Route::get('/uploaded', [CallUploadedController::class, 'index'])->name('index');
+Route::get('/card/{id}', [CallUploadedController::class, 'getFirst'])->name('getFirsts');

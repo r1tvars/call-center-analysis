@@ -15,4 +15,12 @@ class CallUploadedController extends Controller
        return view('uploaded', ['records' => $callRecords]);
 
     }
+
+    public function getFirst(int $id){
+        $callRecords = CallRecord::findOrFail($id);
+
+        return view('card', ['card' => $callRecords]);
+     }
+
+
 }
