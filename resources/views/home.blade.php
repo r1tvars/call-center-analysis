@@ -103,7 +103,7 @@
                 <input type="file" id="files" name="files[]" multiple required class="file-input">
             </div>
             <div class="button-wrapper">
-                <button type="submit">Upload</button>
+                <button type="submit">Augšupielādēt</button>
                 <div id="loading" class="loading" style="display: none;"></div>
             </div>
         </form>
