@@ -6,18 +6,13 @@
     <title>Call Center Audio Post Analysis</title>
 
     <script>
-        async function updateCard(cardId) {
+        async function updateCard(card) {
             try {
-                const response = await fetch(`/card/${cardId}`);
+                const response = await fetch(`/card/${card.getAttribute('id')}`);
                 if (response.ok) {
                     const html = await response.text();
-                    const found = html.search('succeeded');
-                    if (html.trim() && html.includes('succeeded')) {
-                        console.log('asdf');
-                        const cardElement = document.getElementsByClassName('card')[cardId-1];
-
-                            cardElement.outerHTML = html;
-
+                    if (html.trim() && (html.includes('succeeded') || html.includes('in-processing'))) {
+                        card.outerHTML = html;
                     }
                 } else if (response.status === 204) {
                     console.log('No content to update');
@@ -30,7 +25,7 @@
         setInterval(() => {
             document.querySelectorAll('.card').forEach(card => {
                 if (card.getAttribute('status') == 'in-processing' || card.getAttribute('status') == 'failed') {
-                    updateCard(card.getAttribute('id'));
+                    updateCard(card);
                 }
             });
         }, 1000);
