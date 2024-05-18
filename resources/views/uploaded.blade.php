@@ -29,11 +29,11 @@
 
         setInterval(() => {
             document.querySelectorAll('.card').forEach(card => {
-                if (card.getAttribute('status') == 'in-processing') {
+                if (card.getAttribute('status') == 'in-processing' || card.getAttribute('status') == 'failed') {
                     updateCard(card.getAttribute('id'));
                 }
             });
-        }, 20000);
+        }, 1000);
     </script>
 
     <style>

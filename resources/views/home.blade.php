@@ -107,6 +107,9 @@
                 <div id="loading" class="loading" style="display: none;"></div>
             </div>
         </form>
+        <div class="button-wrapper">
+                <button onclick="window.location='/uploaded'">Saraksts</button>
+        </div>
     </div>
 
     <script>
