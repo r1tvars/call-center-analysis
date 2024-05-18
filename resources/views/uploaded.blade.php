@@ -70,6 +70,7 @@
             transform: translateY(-1px);
         }
         button {
+            margin-left: auto;
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
@@ -145,6 +146,86 @@
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
         }
+
+        .circles-container {
+            display: flex;
+            gap: 20px;
+            margin-left: auto;
+        }
+
+        .circle {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #e6e6e6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .green {
+            background-color: #e6ffe6;
+        }
+
+        .yellow {
+            background-color: #fff7e6;
+        }
+
+        .red {
+            background-color: #ffe6e6;
+        }
+
+        .inside-circle {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+        }
+
+        .mask, .fill {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            clip: rect(0px, 100px, 100px, 50px);
+            border-radius: 50%;
+        }
+
+        .mask {
+            clip: rect(0px, 100px, 100px, 50px);
+        }
+
+        .fill {
+            clip: rect(0px, 50px, 100px, 0px);
+            background-color: currentColor;
+        }
+
+        .green .mask.full, .green .fill {
+            color: #28a745;
+        }
+
+        .yellow .mask.full, .yellow .fill {
+            color: #ffc107;
+        }
+
+        .red .mask.full, .red .fill {
+            color: #dc3545;
+        }
+
+        /* Adjust percentages here */
+        .green .mask.full { transform: rotate(0deg); }
+        .green .mask.half .fill { transform: rotate(180deg); }
+
+        .yellow .mask.full { transform: rotate(72deg); }
+        .yellow .mask.half .fill { transform: rotate(36deg); }
+
+        .red .mask.full { transform: rotate(288deg); }
+        .red .mask.half .fill { transform: rotate(144deg); }
     </style>
 </head>
 <body>

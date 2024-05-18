@@ -6,13 +6,34 @@
             <p>batch_id: {{ $card['batch_id'] }}</p>
             <span class="status succeeded">Succeeded</span>
         </div>
-        <div class="transcription-info">
-            @if (isset($card->transcription['combinedRecognizedPhrases']))
+            {{-- @if (isset($card->transcription['combinedRecognizedPhrases']))
                 @foreach ($card->transcription['combinedRecognizedPhrases'] as $phrase)
                     <p>{{ $phrase['display'] }}</p>
                 @endforeach
-            @endif
-        </div>
+            @endif --}}
+        <div class="circles-container">
+            <div class="circle green">
+                <div class="mask full" style="transform: rotate(0deg);"></div>
+                <div class="mask half">
+                    <div class="fill" style="transform: rotate(0deg);"></div>
+                </div>
+                <div class="inside-circle">100%</div>
+            </div>
+            <div class="circle yellow">
+                <div class="mask full" style="transform: rotate(72deg);"></div>
+                <div class="mask half">
+                    <div class="fill" style="transform: rotate(36deg);"></div>
+                </div>
+                <div class="inside-circle">50%</div>
+            </div>
+            <div class="circle red">
+                <div class="mask full" style="transform: rotate(288deg);"></div>
+                <div class="mask half">
+                    <div class="fill" style="transform: rotate(144deg);"></div>
+                </div>
+                <div class="inside-circle">75%</div>
+            </div>
+            </div>
         <button onclick="window.location='/call-record/' + {{$card['id']}};">Atvērt</button>
     </div>
 </div>
