@@ -47,7 +47,8 @@
             border: solid grey;
             border-width: 1px;
             border-radius: 10px;
-            padding: 5px;
+            padding: 10px;
+            margin-top: 5px;
         }
         .date{
             float:right;
