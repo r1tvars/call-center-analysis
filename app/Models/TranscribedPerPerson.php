@@ -11,7 +11,7 @@ class TranscribedPerPerson extends Model
 
     protected $table = 'transcribed_per_person';
 
-    protected $fillable = ['call_record_id', 'transcription_html'];
+    protected $fillable = ['call_record_id', 'transcription_html', 'analysed'];
 
     public function callRecord()
     {
