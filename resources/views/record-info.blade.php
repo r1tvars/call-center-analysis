@@ -55,6 +55,9 @@
             padding-right: 10px;
         }
         
+        .audioplayer{
+            margin-top: -80px;
+        }
 
     </style>
 </head>
@@ -70,9 +73,15 @@
             <div class="card">
                 <div class="content">
                     <div class="content-info">
-                        <span>{{$record->file_name }}</span>
-                        <span class='date' >{{$record->created_at}}</span>
-                        
+                        <div>
+                            <span>{{$record->file_name }}</span>
+                            <span class='date' >{{$record->created_at}}</span>
+                        </div>
+                        @if (isset($record->transcription['source']))
+                        <video controls="" autoplay="" name="media" draggable="true" class='audioplayer'>
+                            <source src={{$record->transcription['source']}} type="audio/x-wav">
+                        </video>
+                        @endif
                         @if ($record->transcribedPerPerson)
                         <div class='transcription_html'>
                             {!! $record->transcribedPerPerson["transcription_html"] !!}
