@@ -17,3 +17,6 @@ Route::get('/uploaded', [CallUploadedController::class, 'index'])->name('index')
 Route::get('/card/{id}', [CallUploadedController::class, 'getFirst'])->name('getFirsts');
 
 Route::post('/start-transcription', [AzureBatchTranscriptionController::class, 'startTranscription'])->name('startTranscription');
+
+
+Route::get('call-record/{id}', [CallUploadedController::class, 'info'])->name('info');

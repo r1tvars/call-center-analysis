@@ -13,7 +13,7 @@
                 @endforeach
             @endif
         </div>
-        <button>Atvērt</button>
+        <button onclick="window.location='/call-record/' + {{$card['id']}};">Atvērt</button>
     </div>
 </div>
 @elseif($card['status'] == 'Running')

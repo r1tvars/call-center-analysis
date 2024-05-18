@@ -28,5 +28,11 @@ class CallUploadedController extends Controller
         return view('card', ['card' => $callRecords]);
      }
 
+     public function info(int $id){
+        $callRecords = CallRecord::findOrFail($id);
+
+        return view('record-info', ['record' => $callRecords]);
+     }
+
 
 }
