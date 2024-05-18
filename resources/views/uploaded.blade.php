@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple CSS Cards</title>
+    <title>Call Center Audio Post Analysis</title>
 
     <script>
         async function updateCard(cardId) {
@@ -15,9 +15,9 @@
                     if (html.trim() && html.includes('succeeded')) {
                         console.log('asdf');
                         const cardElement = document.getElementsByClassName('card')[cardId-1];
-                        
+
                             cardElement.outerHTML = html;
-                        
+
                     }
                 } else if (response.status === 204) {
                     console.log('No content to update');
@@ -43,20 +43,22 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            /* height: 100vh; */
             margin: 0;
         }
 
         .card-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 5px;
+            gap: 10px;
             justify-content: center;
+            width: 78%;
+            padding: 100px 0;
         }
 
         .card {
             /* max-width: 300px; */
-            width: 95%;
+            width: 100%;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -67,11 +69,27 @@
         .card:hover {
             transform: translateY(-1px);
         }
-
-
-
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
         .card .content {
+            display: flex;
+            align-items: center;
             padding: 16px;
+            gap: 5px;
         }
 
         .card .content .title {
@@ -82,10 +100,17 @@
 
         .card .content p {
             color: #555;
-            font-size: 1rem;
+            font-size: 14px;
             margin: 0;
         }
-
+        .card .content .content-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .card .content .content-info h3 {
+           margin: 0;
+        }
         .loader {
             border: 4px solid #f3f3f3; /* Light grey */
             border-top: 4px solid #3498db; /* Blue */
@@ -93,6 +118,27 @@
             width: 30px;
             height: 30px;
             animation: spin 2s linear infinite;
+            margin-left: auto;
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: white;
+            width: fit-content;
+            font-size: 14px;
+        }
+
+        .status.succeeded {
+            background-color: green;
+        }
+
+        .status.running {
+            background-color: orange;
+        }
+
+        .status.failed {
+            background-color: red;
         }
 
         @keyframes spin {

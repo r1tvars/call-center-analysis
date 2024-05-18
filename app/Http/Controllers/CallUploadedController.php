@@ -10,9 +10,15 @@ class CallUploadedController extends Controller
 {
     public function index(){
 
-       $callRecords = CallRecord::all();
+        $cards = CallRecord::all()->map(function($card) {
+            // Check if transcription is a string and decode it
+            if (is_string($card->transcription)) {
+                $card->transcription = json_decode($card->transcription, true);
+            }
+            return $card;
+        });
 
-       return view('uploaded', ['records' => $callRecords]);
+       return view('uploaded', ['records' => $cards]);
 
     }
 
