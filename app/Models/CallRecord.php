@@ -36,4 +36,9 @@ class CallRecord extends Model
     protected $casts = [
         'transcription' => 'array',
     ];
+
+    public function transcribedPerPerson()
+    {
+        return $this->hasOne(TranscribedPerPerson::class);
+    }
 }

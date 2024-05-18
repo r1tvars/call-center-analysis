@@ -3,62 +3,87 @@
 <html>
 <head>
     <title>Table Item</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .card {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        table, th, td {
-            border: 1px solid black;
+        .content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        th, td {
-            padding: 10px;
-            text-align: left;
+        .content-info {
+            flex-grow: 1;
         }
-        th {
-            background-color: #f2f2f2;
+        .content-info h3 {
+            margin: 0 0 10px;
         }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 12px;
+            color: #fff;
+        }
+        .status.running {
+            background-color: #28a745;
+        }
+
+        .back-button{
+            margin-left: 1em;
+            color: rebeccapurple;
+            text-decoration: none;
+        }
+        .back-button-div{
+            margin-left: 10px;
+            margin-top: 10px;
+        }
+
+        .transcription_html{
+            border: solid grey;
+            border-width: 1px;
+            border-radius: 10px;
+            padding: 5px;
+        }
+        .date{
+            float:right;
+            padding-right: 10px;
+        }
+        
+
     </style>
 </head>
 <body>
-    <h1>Ieraksts</h1>
-    @if ($record)
-        <table>
-            <tr>
-                <th>Field</th>
-                <th>Value</th>
-            </tr>
-            <tr>
-                <td>id</td>
-                <td>{{ $record->id }}</td>
-            </tr>
-            <tr>
-                <td>Faila nosaukums</td>
-                <td>{{ $record->file_name }}</td>
-            </tr>
-            <tr>
-                <td>Transkripcija</td>
-                <td>{{ $record->transcription }}</td>
-            </tr>
-            <tr>
-                <td>statuss</td>
-                <td>{{ $record->status }}</td>
-            </tr>
-            <tr>
-                <td>batch id</td>
-                <td>{{ $record->batch_id }}</td>
-            </tr>
-            <tr>
-                <td>Izveidots</td>
-                <td>{{ $record->created_at }}</td>
-            </tr>
-            <tr>
-                <td>Atjaunināts</td>
-                <td>{{ $record->updated_at }}</td>
-            </tr>
-        </table>
-    @else
-        <p>No item found with the given ID.</p>
-    @endif
+<div class='back-button-div'>
+    <a class="back-button" href="{{ url()->previous() }}" >
+        Atpakaļ
+    </a>
+</div>
+    <div class="container">
+        
+        @if ($record)
+            <div class="card">
+                <div class="content">
+                    <div class="content-info">
+                        <span>{{$record->file_name }}</span>
+                        <span class='date' >{{$record->created_at}}</span>
+                        
+                        @if ($record->transcribedPerPerson)
+                        <div class='transcription_html'>
+                            {!! $record->transcribedPerPerson["transcription_html"] !!}
+                        </div>
+                            
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @else
+            <p>No item found with the given ID.</p>
+        @endif
+    </div>
 </body>
 </html>
