@@ -40,62 +40,46 @@ class AnalyzeTranscription implements ShouldQueue
         // Strip HTML tags from transcription_html
         $text = strip_tags($this->transcribedPerPerson->transcription_html);
 
-        // Define API URLs
-        $apiBase = 'https://api.openai.com/v1';
-        $createThreadUrl = "$apiBase/threads";
-        $assistantId = "asst_Jsr5L17qU1zOYf3zUYEw1Zn5";
-
         try {
-            // Step 1: Create a Thread
-            $threadResponse = $client->post($createThreadUrl, [
+            $response = $client->post('https://api.openai.com/v1/chat/completions', [
                 'headers' => [
                     'Authorization' => 'Bearer ' . env('OPENAI_API_KEY'),
                     'Content-Type' => 'application/json',
-                    'OpenAI-Beta' => 'assistants=v2',
-                ],
-                'json' => []
-            ]);
-
-            $threadResponseBody = json_decode($threadResponse->getBody(), true);
-            $threadId = $threadResponseBody['id'];
-            Log::info("Thread created with ID: $threadId");
-
-            // Step 2: Add Messages to the Thread
-            $addMessageUrl = "$apiBase/threads/$threadId/messages";
-            $client->post($addMessageUrl, [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . env('OPENAI_API_KEY'),
-                    'Content-Type' => 'application/json',
-                    'OpenAI-Beta' => 'assistants=v2',
                 ],
                 'json' => [
-                    'role' => 'user',
-                    'content' => $text,
-                ],
-            ]);
-            Log::info("Message added to thread ID: $threadId");
-
-            // Step 3: Create a Run
-            $createRunUrl = "$apiBase/assistants/$assistantId/runs";
-            $runResponse = $client->post($createRunUrl, [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . env('OPENAI_API_KEY'),
-                    'Content-Type' => 'application/json',
-                    'OpenAI-Beta' => 'assistants=v2',
-                ],
-                'json' => [
-                    'thread_id' => $threadId,
+                    'model' => 'gpt-4o',
+                    'messages' => [
+                        [
+                            'role' => 'system',
+                            'content' => 'Tavs uzdevums ir veikt sarunas teksta (call transcript) analīzi un noteikt cik % no sarunas ir ar pozitīvu sentimentu, cik % no sarunas ir ar neitrālu sentimentu un cik % no sarunas ir ar negatīvu sentimentu. Īpaši pievērs uzmanību frāzēm, kur klients piemin: tiesāšos, sūdzēšos tiesā, iesūdzēšu jūs tiesā, sūdzēšos medijiem, vai izsaka citus draudus uzņēmuma pārstāvim.'
+                        ],
+                        [
+                            'role' => 'user',
+                            'content' => $text,
+                        ],
+                    ],
                 ],
             ]);
 
-            $runResponseBody = json_decode($runResponse->getBody(), true);
-            if (isset($runResponseBody['choices'][0]['message']['content'])) {
-                $analysedText = $runResponseBody['choices'][0]['message']['content'];
+            $responseBody = json_decode($response->getBody(), true);
+            Log::info("OpenAI response: " . json_encode($responseBody));
+
+            if (isset($responseBody['choices'][0]['message']['content'])) {
+                $analysedText = $responseBody['choices'][0]['message']['content'];
+                Log::info("Analysed Text: " . $analysedText);
+
                 // Save the analysed text in the database
                 $this->transcribedPerPerson->update(['analysed' => $analysedText]);
-                Log::info("Transcription analysis completed and saved successfully.");
+
+                // Verify if the update was successful
+                if ($this->transcribedPerPerson->wasChanged('analysed')) {
+                    Log::info("Transcription analysis completed and saved successfully.");
+                } else {
+                    Log::error("Failed to save the analysed text to the database.");
+                    Log::info("Analysed Text TYPE: " . gettype($analysedText));
+                }
             } else {
-                Log::error("OpenAI response missing 'choices' or 'message': " . json_encode($runResponseBody));
+                Log::error("OpenAI response missing 'choices' or 'message': " . json_encode($responseBody));
             }
         } catch (\Exception $e) {
             Log::error("Failed to analyze transcription: " . $e->getMessage());
